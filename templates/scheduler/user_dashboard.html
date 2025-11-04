@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - TeamDutyPlanner{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1>My Dashboard</h1>
+        <p class="text-muted">Welcome, {{ user.username }}! Here's your schedule overview.</p>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Quick Links</h5>
+                <div class="d-grid gap-2">
+                    <a href="{% url 'my_schedule' %}" class="btn btn-primary">View My Schedule</a>
+                    <a href="{% url 'all_members' %}" class="btn btn-outline-primary">View All Members</a>
+                    <a href="{% url 'pto_requests' %}" class="btn btn-outline-primary">Request PTO</a>
+                    <a href="{% url 'export_schedule' %}" class="btn btn-outline-primary">Export Schedule</a>
+                    <a href="{% url 'profile_settings' %}" class="btn btn-outline-secondary">Profile Settings</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Upcoming Shifts</h5>
+                {% if user_shifts %}
+                    {% for shift in user_shifts %}
+                    <div class="border-start border-primary ps-3 mb-2">
+                        <strong>{{ shift.title }}</strong><br>
+                        <small class="text-muted">
+                            {{ shift.start_time_utc|date:"M d, Y H:i" }} - {{ shift.end_time_utc|date:"H:i" }} UTC
+                        </small>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">No upcoming shifts</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
