@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard - TeamDutyPlanner{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1>Admin Dashboard</h1>
+        <p class="text-muted">Welcome, Ravi! Manage your team's schedules and PTO requests.</p>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-white current-shift">
+            <div class="card-body">
+                <h5 class="card-title">On Duty Now</h5>
+                {% if current_shifts %}
+                    {% for shift in current_shifts %}
+                        <p class="card-text h4">{{ shift.member.username }}</p>
+                        <small>{{ shift.title }}</small>
+                    {% endfor %}
+                {% else %}
+                    <p class="card-text">No one is currently on duty</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Pending PTO Requests</h5>
+                <p class="card-text h4 text-primary">{{ pending_pto_count }}</p>
+                <a href="{% url 'pto_requests' %}" class="btn btn-outline-primary btn-sm">Review</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Quick Actions</h5>
+                <a href="{% url 'add_shift' %}" class="btn btn-primary btn-sm mb-2">Add Shift</a>
+                <a href="{% url 'all_members' %}" class="btn btn-outline-primary btn-sm mb-2">View All Members</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">This Week's Schedule</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Member</th>
+                                <th>Shift</th>
+                                <th>Start Time (UTC)</th>
+                                <th>End Time (UTC)</th>
+                                <th>Notes</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for shift in all_shifts %}
+                            <tr>
+                                <td>{{ shift.member.username }}</td>
+                                <td>{{ shift.title }}</td>
+                                <td>{{ shift.start_time_utc|date:"M d, Y H:i" }}</td>
+                                <td>{{ shift.end_time_utc|date:"M d, Y H:i" }}</td>
+                                <td>{{ shift.notes|default:"-" }}</td>
+                                <td>
+                                    <a href="{% url 'edit_shift' shift.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                    <a href="{% url 'delete_shift' shift.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center">No shifts scheduled for this week</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
