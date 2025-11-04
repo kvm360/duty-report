@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}All Members - TeamDutyPlanner{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1>All Team Members</h1>
+        <p class="text-muted">Click on a member to view their schedule</p>
+    </div>
+</div>
+
+<div class="row">
+    {% for member in members %}
+    <div class="col-md-4 mb-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="card-title">{{ member.username }}</h5>
+                <p class="card-text text-muted">
+                    {% with team_member=member.teammember %}
+                        {{ team_member.timezone }}
+                    {% endwith %}
+                </p>
+                <a href="{% url 'member_schedule' member.username %}" class="btn btn-primary">View Schedule</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
